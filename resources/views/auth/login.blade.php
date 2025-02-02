@@ -1,27 +1,32 @@
-<x-guest-layout>
+@extends('layouts.app')
+
+@section('content')
     <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    @if (session('status'))
+        <div class="alert alert-success mb-4">
+            {{ session('status') }}
+        </div>
+    @endif
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <label for="email" class="form-label">{{ __('Email') }}</label>
+            <input id="email" type="email" class="form-control" name="email" required autofocus>
+            @if ($errors->has('email'))
+                <div class="text-danger mt-2">{{ $errors->first('email') }}</div>
+            @endif
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <label for="password" class="form-label">{{ __('Password') }}</label>
+            <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
+            @if ($errors->has('password'))
+                <div class="text-danger mt-2">{{ $errors->first('password') }}</div>
+            @endif
         </div>
 
         <!-- Remember Me -->
@@ -39,9 +44,9 @@
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <button type="submit" class="btn btn-primary ms-3">
                 {{ __('Log in') }}
-            </x-primary-button>
+            </button>
         </div>
     </form>
-</x-guest-layout>
+@endsection

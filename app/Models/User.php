@@ -21,13 +21,18 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'contact_number',
+        'role',
+        'organization_name',
+        'user_id',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+
+    // Get the educator's ID as EDxxxxx format
+    public function getEducatorIdAttribute()
+    {
+        return 'ED' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
+    }
     protected $hidden = [
         'password',
         'remember_token',
