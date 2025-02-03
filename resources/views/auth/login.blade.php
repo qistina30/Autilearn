@@ -11,12 +11,12 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Email Address -->
+        <!-- User ID -->
         <div>
-            <label for="email" class="form-label">{{ __('Email') }}</label>
-            <input id="email" type="email" class="form-control" name="email" required autofocus>
-            @if ($errors->has('email'))
-                <div class="text-danger mt-2">{{ $errors->first('email') }}</div>
+            <label for="user_id" class="form-label">{{ __('User ID') }}</label>
+            <input id="user_id" type="text" class="form-control" name="user_id" required autofocus>
+            @if ($errors->has('user_id'))
+                <div class="text-danger mt-2">{{ $errors->first('user_id') }}</div>
             @endif
         </div>
 

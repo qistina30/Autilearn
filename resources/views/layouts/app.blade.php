@@ -17,35 +17,42 @@
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <!-- Logo on the left -->
             <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{asset('image/logo.png') }}" alt="Logo" style="width: 50px; height: auto;">
+                <img src="{{ asset('image/logo.png') }}" alt="Logo" style="width: 50px; height: auto;">
             </a>
 
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Home</button>
-            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">##</button>
+            <a href="{{ route('student.create') }}" class="nav-link" id="nav-profile-tab" role="tab">
+                Add New Student
+            </a>
             <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">##</button>
             <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false" disabled>##</button>
 
-            <!-- Right-aligned login and register links, only on the welcome page -->
-            @if(request()->is('/'))
-                <div class="ms-auto">
+            <!-- Right-aligned login, register, and user info -->
+            <div class="ms-auto d-flex align-items-center">
+                @guest
                     <a href="{{ route('login') }}" class="btn btn-outline-primary ms-2">Login</a>
                     <a href="{{ route('educator.register') }}" class="btn btn-outline-secondary ms-2">Register</a>
-                </div>
-            @endif
+                @endguest
+
+                @auth
+                    <!-- Show the logged-in user's name and user ID -->
+                    <span class="me-3">Hi, {{ Auth::user()->name }} (ID: {{ Auth::user()->user_id }})!</span>
+
+                        <!-- Logout Button -->
+                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger ms-2">Logout</button>
+                    </form>
+                @endauth
+            </div>
         </div>
     </nav>
+
 </head>
 
 <body>
 
 <div id="app">
-
-    <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">...</div>
-        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">...</div>
-        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
-        <div class="tab-pane fade" id="nav-disabled" role="tabpanel" aria-labelledby="nav-disabled-tab" tabindex="0">...</div>
-    </div>
 
     <main class="py-4">
         @yield('content') <!-- This will inject content from child pages -->

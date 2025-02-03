@@ -12,11 +12,11 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // Specify the primary key for this model
+    protected $primaryKey = 'user_id'; // Set user_id as the primary key
+
+    // Make sure to tell Eloquent that the primary key is not an incrementing integer
+    public $incrementing = false; // Since user_id is a string (not auto-incremented)
     protected $fillable = [
         'name',
         'email',
@@ -33,6 +33,12 @@ class User extends Authenticatable
     {
         return 'ED' . str_pad($this->id, 5, '0', STR_PAD_LEFT);
     }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'educator_user_id', 'user_id');
+    }
+
     protected $hidden = [
         'password',
         'remember_token',

@@ -17,18 +17,32 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'user_id' => 'required|string',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($request->only('email', 'password'))) {
+        // Attempt to log in using user_id and password
+        $credentials = [
+            'user_id' => $request->user_id,  // Use 'user_id' instead of 'id'
+            'password' => $request->password,
+        ];
+
+        if (Auth::attempt($credentials)) {
             return redirect()->route('dashboard');
         }
 
         return back()->withErrors([
-            'email' => 'Invalid credentials provided.',
+            'user_id' => 'Invalid credentials provided.',  // Update error message for user_id
         ]);
     }
 
-    // Add other methods like logout if needed
+    // Logout user
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Log out the current user
+        $request->session()->invalidate(); // Invalidate the session
+        $request->session()->regenerateToken(); // Regenerate the CSRF token
+
+        return redirect()->route('welcome'); // Redirect to the login page or any other route
+    }
 }
