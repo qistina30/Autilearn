@@ -7,6 +7,16 @@
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
 
         <form action="{{ route('student.store') }}" method="POST">
             @csrf
@@ -15,6 +25,12 @@
                 <label for="full_name" class="form-label">Full Name</label>
                 <input type="text" class="form-control" id="full_name" name="full_name" required>
             </div>
+
+            <div class="mb-3">
+                <label for="ic_number" class="form-label">IC/MyKid Number</label>
+                <input type="text" class="form-control" id="ic_number" name="ic_number" required>
+            </div>
+
 
             <div class="mb-3">
                 <label for="age" class="form-label">Age</label>

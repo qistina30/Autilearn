@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('welcome'); // This view should exist in resources/views/welcome.blade.php
+})->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -28,7 +28,7 @@ Route::get('/educator/register', [EducatorController::class, 'create'])->name('e
 // Handle registration submission
 Route::post('/educator/register', [EducatorController::class, 'store'])->name('educator.store');
 
-Route::middleware(['auth'])->group(function () {
+
     Route::get('/student/create', [StudentController::class, 'create'])->name('student.create');
     Route::post('/student/store', [StudentController::class, 'store'])->name('student.store');
-});
+Route::get('/student/learning_module', [StudentController::class, 'learningModule1'])->name('student.learning_module');

@@ -25,44 +25,35 @@ class StudentController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Validate the form input
-        $request->validate([
-            'full_name' => 'required|string|max:255',
-            'age' => 'required|integer|min:3|max:100',
-            'address' => 'required|string|max:500',
-            'parent_name' => 'required|string|max:255',
-            'contact_number' => 'required|string|max:15',
-        ]);
+{
+    // Validate the form input, including uniqueness of IC/MyKid number
+    $request->validate([
+        'full_name' => 'required|string|max:255',
+        'ic_number' => 'required|string|max:20|unique:students,ic_number', // Ensure IC number is unique
+        'age' => 'required|integer|min:3|max:100',
+        'address' => 'required|string|max:500',
+        'parent_name' => 'required|string|max:255',
+        'contact_number' => 'required|string|max:15'], [
+        'ic_number.unique' => 'Student already exists', // Custom error message for IC number
+    ]);
 
-        // Get the currently authenticated user
-        $user = Auth::user();
 
-        if (!$user) {
-            return redirect()->route('login')->withErrors(['error' => 'Please log in to add a student.']);
-        }
+    // Get the currently authenticated educator's user_id
+    $educatorUserId = Auth::user()->user_id; // Ensure 'user_id' is being retrieved properly
 
-        // Retrieve the educator's user_id
-        $educatorUserId = $user->user_id;
+    // Create a new student record
+    Student::create([
+        'full_name' => $request->full_name,
+        'ic_number' => $request->ic_number, // Save the IC/MyKid number
+        'age' => $request->age,
+        'address' => $request->address,
+        'parent_name' => $request->parent_name,
+        'contact_number' => $request->contact_number,
+        'educator_user_id' => $educatorUserId, // Store educator's user_id
+    ]);
 
-        // Log the data to the log file
-        \Log::info([
-            'full_name' => $request->full_name,
-            'educator_user_id' => $educatorUserId,
-        ]);
-
-        // Create a new student record with the educator's user_id
-        Student::create([
-            'full_name' => $request->full_name,
-            'age' => $request->age,
-            'address' => $request->address,
-            'parent_name' => $request->parent_name,
-            'contact_number' => $request->contact_number,
-            'educator_user_id' => $educatorUserId, // Store educator's user_id here
-        ]);
-
-        return redirect()->route('student.create')->with('success', 'Student added successfully!');
-    }
+    return redirect()->route('student.create')->with('success', 'Student added successfully!');
+}
 
 
     /**
@@ -96,4 +87,11 @@ class StudentController extends Controller
     {
         //
     }
+
+    public function learningModule1()
+    {
+        // Return the view for Learning Module 1
+        return view('student.learning_module');  // This view will contain your learning activity logic
+    }
+
 }

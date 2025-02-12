@@ -15,6 +15,7 @@ class Student extends Model
         'address',
         'parent_name',
         'contact_number',
+        'ic_number',
         'educator_user_id', // Foreign key referencing the educator
     ];
     public function user()

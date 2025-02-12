@@ -33,9 +33,18 @@ class EducatorController extends Controller
         ]);
 
         // Generate default ID (ED12345 format)
-        $lastUser = User::orderBy('id', 'desc')->first();  // Get the most recently created user based on 'id'
-        $nextId = $lastUser ? $lastUser->id + 1 : 12345;  // Increment the last ID, or start from 12345 if no user exists
-        $userId = 'ED' . str_pad($nextId, 5, '0', STR_PAD_LEFT);  // Generate ID, ensuring 5 digits
+        $lastUser = User::orderBy('user_id', 'desc')->first();  // Get the most recent user_id
+
+        if ($lastUser) {
+            // Extract numeric part of the user_id (e.g., "ED12345" -> "12345")
+            $lastNumber = (int) substr($lastUser->user_id, 2);
+            $nextId = $lastNumber + 1;
+        } else {
+            $nextId = 12345; // Start from 12345 if no user exists
+        }
+
+        $userId = 'ED' . str_pad($nextId, 5, '0', STR_PAD_LEFT);  // Format as "ED12345"
+
 
         // Create the user and store the generated userId
         $user = User::create([
